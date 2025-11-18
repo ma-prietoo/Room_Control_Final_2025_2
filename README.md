@@ -94,4 +94,6 @@ El diseño del firmware es crucial. Deben explicar y justificar su diseño.
 
 ---
 
-**¡Manos a la obra! Este proyecto es su oportunidad para brillar y demostrar su capacidad para diseñar y construir un sistema embebido completo y robusto.**
+Puedes guiarte usando el contenido del docuemnto **[IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)**
+
+**¡Manos a la obra! Este proyecto es su oportunidad para brillar y demostrar su capacidad para diseñar y construir un sistema computacional completo y robusto.**

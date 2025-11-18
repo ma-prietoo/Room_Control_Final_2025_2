@@ -95,6 +95,23 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/**
+ * @brief  Write a character to the UART using printf().
+*/
+int _write(int file, char *ptr, int len)
+{
+  (void)file;
+  HAL_UART_Transmit(&huart2, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+  return len;
+}
+
+void write_to_oled(char *message, SSD1306_COLOR color, uint8_t x, uint8_t y)
+{
+  ssd1306_SetCursor(x, y); // Set cursor to the specified position
+  ssd1306_WriteString(message, Font_7x10, color);
+  ssd1306_UpdateScreen(); // Update the display to show the message
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == B1_Pin) {
@@ -111,7 +128,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
 }
 
-
 void heartbeat(void)
 {
   static uint32_t last_toggle = 0;
@@ -119,14 +135,6 @@ void heartbeat(void)
     led_toggle(&heartbeat_led); // Toggle the heartbeat LED
     last_toggle = HAL_GetTick();
   }
-}
-
-void write_to_oled(char *message, SSD1306_COLOR color, uint8_t x, uint8_t y)
-{
-  ssd1306_Fill(Black); // Clear the display
-  ssd1306_SetCursor(x, y); // Set cursor to the specified position
-  ssd1306_WriteString(message, Font_7x10, color);
-  ssd1306_UpdateScreen(); // Update the display to show the message
 }
 
 /* USER CODE END 0 */
@@ -181,11 +189,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   // Clear the display
   ssd1306_Fill(Black);
-  // Display a message on the OLED
-  ssd1306_SetCursor(17, 17); // Set cursor to the center
-  ssd1306_WriteString("Hello, 4100901!", Font_7x10, White);
-  ssd1306_UpdateScreen(); // Update the display to show the
-  HAL_UART_Transmit(&huart2, (uint8_t *)"Hello, 4100901!\r\n", 17, HAL_MAX_DELAY);
+  write_to_oled("Hello, 4100901!", White, 17, 17);
+  printf("Hello, 4100901!\r\n");
   while (1) {
     heartbeat(); // Call the heartbeat function to toggle the LED
 
