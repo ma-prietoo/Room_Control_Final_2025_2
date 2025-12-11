@@ -154,7 +154,7 @@ Calcula nivel automático según temperatura.
 - < 25°C → OFF  
 - 25–28°C → BAJO  
 - 28–31°C → MEDIO  
-- > 31°C → ALTO  
+- >31°C → ALTO  
 
 ### Manual
 
@@ -241,7 +241,8 @@ Pines:
 - Modo manual del ventilador puede activarse accidentalmente  
 - Emergencia funciona, pero sería útil pedir confirmación  
 - El teclado es crítico para todo el sistema  
-
+## Nota
+Durante el desarrollo del sistema, se presentaron dificultades al intentar implementar la comunicación inalámbrica mediante el módulo ESP-01. Estos inconvenientes afectaron temporalmente la integración de los datos y la transmisión de alertas, aunque no comprometieron el funcionamiento general del control de la habitación.
 ---
 
 ## Conclusiones
