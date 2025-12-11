@@ -95,26 +95,41 @@ Puerta abierta.
 
 ## 3. Principales funciones del código
 
-### `room_control_init()`
-Configura estado inicial y PWM.
+### 'room_control_init()'
 
-### `room_control_update()`
-Evalúa estado actual y actualiza puerta, display y ventilador.
+-Configura los valores iniciales.
+-Deja el sistema en estado bloqueado.
+-Enciende PWM con valor inicial 0%.
 
-### `room_control_process_key()`
-Procesa teclas según estado.
+### 'room_control_update()'
 
-### `room_control_update_fan()`
-Convierte nivel a PWM.
+-Revisa el estado actual y ejecuta acciones:
+ bloquear puerta, mostrar mensajes, manejar tiempo de espera.
+-Luego actualiza el display, el ventilador y la puerta.
 
-### `room_control_update_door()`
-Abre/cierra con un pin digital.
 
-### `room_control_update_display()`
-Actualiza pantalla OLED solo si es necesario.
+### 'room_control_process_key()'
 
-### `room_control_calculate_fan_level()`
-Calcula nivel automático según temperatura.
+-Reacciona inmediatamente cuando se presiona una tecla.
+-Según el estado ejecuta acciones específicas:
+Agregar dígitos, borrar, cambiar modo ventilador, activar emergencia.
+
+### 'room_control_update_fan()'
+
+-Traduce el nivel del ventilador a un valor PWM real.
+
+### 'room_control_update_door()'
+
+-Activa o desactiva un pin para abrir/cerrar.
+
+### 'room_control_update_display()'
+
+-Muestra el estado correspondiente en la pantalla OLED.
+
+### 'room_control_calculate_fan_level()'
+
+-Niveles automáticos según temperatura:
+OFF,  BAJO, MEDIO, ALTO.
 
 
 ## 4. Funcionamiento del teclado
