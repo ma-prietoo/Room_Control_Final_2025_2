@@ -151,10 +151,10 @@ Calcula nivel automático según temperatura.
 
 ### Automático
 
-- < 25°C → OFF  
-- 25–28°C → BAJO  
-- 28–31°C → MEDIO  
-- >31°C → ALTO  
+- Menor que 25°C → OFF  
+- Entre 25–28°C → BAJO  
+- Entre 28–31°C → MEDIO  
+- Mayor que 31°C → ALTO  
 
 ### Manual
 
