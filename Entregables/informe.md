@@ -5,7 +5,6 @@
 **Integrantes:** María de los Ángeles Prieto Ortega – Mariana Zuluaga Yepes  
 **Diciembre de 2025**
 
----
 
 ## MATERIALES
 
@@ -17,13 +16,11 @@
 - Resistencias  
 - Jumpers  
 
----
 
 ## OBJETIVO
 
 Diseñar un sistema capaz de controlar el acceso a una habitación mediante contraseña, visualizar información en pantalla, supervisar la temperatura y activar un ventilador de forma automática o manual. Además, se incluye un modo de emergencia y envío de alertas mediante el módulo ESP-01.
 
----
 
 ## PROCEDIMIENTO
 
@@ -37,11 +34,9 @@ En la función `room_control_init()` se configuran:
 - Configuración del pin de puerta  
 - PWM del ventilador en 0%  
 
----
 
 ### 2. Funcionamiento por estados (Máquina de estados)
 
----
 
 ### **Estado 1: ROOM_STATE_LOCKED (Bloqueado)**
 
@@ -49,7 +44,6 @@ En la función `room_control_init()` se configuran:
 - Puerta cerrada
 - Si se presiona un número → pasa a ingresar contraseña
 
----
 
 ### **Estado 2: ROOM_STATE_INPUT_PASSWORD (Ingreso de contraseña)**
 
@@ -62,7 +56,6 @@ En la función `room_control_init()` se configuran:
 
 - Inactividad 10 segundos → vuelve a LOCKED
 
----
 
 ### **Estado 3: ROOM_STATE_UNLOCKED (Acceso concedido)**
 
@@ -83,7 +76,6 @@ Acciones:
 
 Puerta abierta.
 
----
 
 ### **Estado 4: ROOM_STATE_ACCESS_DENIED (Acceso denegado)**
 
@@ -91,7 +83,6 @@ Puerta abierta.
 - Envía al ESP-01: `"ALERTA: Acceso denegado"`  
 - Luego de 3 segundos vuelve a LOCKED
 
----
 
 ### **Estado 5: ROOM_STATE_EMERGENCY (Emergencia)**
 
@@ -101,7 +92,6 @@ Puerta abierta.
 - Envía: `"ALERTA: Emergencia activada"`  
 - Salida con tecla **#**
 
----
 
 ## 3. Principales funciones del código
 
@@ -126,7 +116,6 @@ Actualiza pantalla OLED solo si es necesario.
 ### `room_control_calculate_fan_level()`
 Calcula nivel automático según temperatura.
 
----
 
 ## 4. Funcionamiento del teclado
 
@@ -145,7 +134,6 @@ Calcula nivel automático según temperatura.
 - Filas (Outputs): PC0–PC3  
 - Columnas (Inputs Pull-up): PC4–PC7
 
----
 
 ## 5. Control del ventilador
 
@@ -166,7 +154,6 @@ Calcula nivel automático según temperatura.
 **Pin:** PA6 (TIM3_CH1)  
 **Duty cycle:** 0–99
 
----
 
 ## 6. Control de la puerta
 
@@ -184,14 +171,12 @@ Se cierra en:
 - LOW → cerrada  
 - HIGH → abierta
 
----
 
 ## 7. Pantalla OLED SSD1306
 
 - Actualización solo si `display_update_needed == true`  
 - Pines: PB6 (SCL), PB7 (SDA)
 
----
 
 ## Comunicación con ESP-01
 
@@ -205,7 +190,6 @@ Pines:
 - PB10 – USART3_TX  
 - PB11 – USART3_RX  
 
----
 
 ## Optimizaciones
 
@@ -214,7 +198,6 @@ Pines:
 - Máquina de estados modular y escalable  
 - Control eficiente por temperatura  
 
----
 
 ## Resultados
 
@@ -231,7 +214,6 @@ Pines:
  ![WhatsApp Image 2025-12-11 at 11.47.22 AM](WhatsApp%20Image%202025-12-11%20at%2011.47.22%20AM.jpeg)
 
 
----
 
 ## Observaciones
 
@@ -246,7 +228,6 @@ Pines:
 
 Durante el desarrollo del sistema, se presentaron dificultades al intentar implementar la comunicación inalámbrica mediante el módulo ESP-01. Estos inconvenientes afectaron temporalmente la integración de los datos y la transmisión de alertas, aunque no comprometieron el funcionamiento general del control de la habitación.
 
----
 
 ## Conclusiones
 
