@@ -217,15 +217,19 @@ Pines:
 ---
 
 ## Resultados
-![WhatsApp Image 2025-12-11 at 11.16.13 AM](WhatsApp%20Image%202025-12-11%20at%2011.16.13%20AM.jpeg)
 
 - Figura 1: Circuito montado
-![WhatsApp Image 2025-12-11 at 9.57.18 AM](WhatsApp%20Image%202025-12-11%20at%209.57.18%20AM.jpeg)
+
+![WhatsApp Image 2025-12-11 at 11.16.13 AM](WhatsApp%20Image%202025-12-11%20at%2011.16.13%20AM.jpeg)
 
 - Figura 2: Diagrama
-![WhatsApp Image 2025-12-11 at 11.47.22 AM](WhatsApp%20Image%202025-12-11%20at%2011.47.22%20AM.jpeg)
 
-- Figura 3: Sistema funcionando  
+![WhatsApp Image 2025-12-11 at 9.57.18 AM](WhatsApp%20Image%202025-12-11%20at%209.57.18%20AM.jpeg)
+
+- Figura 3: Sistema funcionando
+
+ ![WhatsApp Image 2025-12-11 at 11.47.22 AM](WhatsApp%20Image%202025-12-11%20at%2011.47.22%20AM.jpeg)
+
 
 ---
 
