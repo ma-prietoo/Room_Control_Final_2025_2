@@ -98,19 +98,23 @@ Puerta abierta.
 ### 'room_control_init()'
 
 -Configura los valores iniciales.
+
 -Deja el sistema en estado bloqueado.
+
 -Enciende PWM con valor inicial 0%.
 
 ### 'room_control_update()'
 
 -Revisa el estado actual y ejecuta acciones:
  bloquear puerta, mostrar mensajes, manejar tiempo de espera.
+ 
 -Luego actualiza el display, el ventilador y la puerta.
 
 
 ### 'room_control_process_key()'
 
 -Reacciona inmediatamente cuando se presiona una tecla.
+
 -Según el estado ejecuta acciones específicas:
 Agregar dígitos, borrar, cambiar modo ventilador, activar emergencia.
 
