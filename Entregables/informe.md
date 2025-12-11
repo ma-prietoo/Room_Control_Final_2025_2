@@ -1,245 +1,253 @@
-PROYECTO FINAL: SISTEMA DE CONTROL DE SALA
+# PROYECTO FINAL: SISTEMA DE CONTROL DE SALA
 
-Materia: Estructuras Computacionales
+**Materia:** Estructuras Computacionales  
+**Docente:** Samuel Andrés Cifuentes Muñoz  
+**Integrantes:** María de los Ángeles Prieto Ortega – Mariana Zuluaga Yepes  
+**Diciembre de 2025**
 
-Docente: Samuel Andrés Cifuentes Muñoz
-
-Integrantes: María de los Ángeles Prieto Ortega - Mariana Zuluaga Yepes 
-
-Diciembre de 2025
+---
 
 ## MATERIALES
 
-- Microcontrolador STM32L476RG
-- Pantalla OLED SSD1306 (128×64)
-- Teclado matricial 4×4
-- Módulo WiFi ESP-01
-- Sensor de temperatura DHT11
-- Resistencias
-- Jumpers
+- Microcontrolador STM32L476RG  
+- Pantalla OLED SSD1306 (128×64)  
+- Teclado matricial 4×4  
+- Módulo WiFi ESP-01  
+- Sensor de temperatura DHT11  
+- Resistencias  
+- Jumpers  
+
+---
 
 ## OBJETIVO
 
 Diseñar un sistema capaz de controlar el acceso a una habitación mediante contraseña, visualizar información en pantalla, supervisar la temperatura y activar un ventilador de forma automática o manual. Además, se incluye un modo de emergencia y envío de alertas mediante el módulo ESP-01.
 
+---
+
 ## PROCEDIMIENTO
 
 ### 1. Inicialización general
 
-En la función `room_control_init()` se configuran todos los módulos necesarios:
+En la función `room_control_init()` se configuran:
 
-- Estado inicial del sistema: **LOCKED** (bloqueado).
-- Contraseña por defecto: **2222**
-- Se limpia el buffer donde se guarda la contraseña ingresada.
-- Se configura el pin encargado de la puerta.
-- Se inicia el PWM del ventilador (duty cycle 0%).
-
----
-
-### 2. Funcionamiento del sistema por estados
-
-El sistema funciona como una máquina de estados:
+- Estado inicial: **LOCKED**  
+- Contraseña por defecto: **2222**  
+- Limpieza del buffer de ingreso  
+- Configuración del pin de puerta  
+- PWM del ventilador en 0%  
 
 ---
 
-#### **Estado 1: ROOM_STATE_LOCKED (Bloqueado)**
-
-- Se muestra “SISTEMA BLOQUEADO”.
-- La puerta permanece cerrada.
-- Con cualquier número presionado → pasa a ingreso de contraseña.
+### 2. Funcionamiento por estados (Máquina de estados)
 
 ---
 
-#### **Estado 2: ROOM_STATE_INPUT_PASSWORD (Ingreso de contraseña)**
+### **Estado 1: ROOM_STATE_LOCKED (Bloqueado)**
 
-- Se muestra “CLAVE:” con asteriscos.
-- Tecla C → borrar.
-- Si ingresa 4 dígitos:
-  - Correcta → pasa a **UNLOCKED**
-  - Incorrecta → pasa a **ACCESS_DENIED**
-- Inactividad 10 segundos → vuelve a **LOCKED**
+- Pantalla: **“SISTEMA BLOQUEADO”**
+- Puerta cerrada
+- Si se presiona un número → pasa a ingresar contraseña
 
 ---
 
-#### **Estado 3: ROOM_STATE_UNLOCKED (Acceso concedido)**
+### **Estado 2: ROOM_STATE_INPUT_PASSWORD (Ingreso de contraseña)**
 
-La pantalla muestra:
+- Pantalla: “**CLAVE**” + asteriscos  
+- **C** borra dígitos  
+- Se evalúan 4 dígitos:
 
-- ACCESO OK
-- Temperatura actual
-- Estado del ventilador: OFF / BAJO / MEDIO / ALTO
-- Modo: MANUAL o AUTO
+  - Correcta → **UNLOCKED**  
+  - Incorrecta → **ACCESS_DENIED**  
 
-Permite:
+- Inactividad 10 segundos → vuelve a LOCKED
+
+---
+
+### **Estado 3: ROOM_STATE_UNLOCKED (Acceso concedido)**
+
+Pantalla muestra:
+
+- **ACCESO OK**  
+- Temperatura  
+- Nivel del ventilador  
+- Modo (MANUAL o AUTO)
+
+Acciones:
 
 - Cambiar modo del ventilador  
-- Control manual con 0-3  
-- Auto con A  
-- Bloqueo con B  
-- Emergencia con D  
+- Control manual (0–3)  
+- Activar modo AUTO con **A**  
+- Bloquear con **B**  
+- Emergencia con **D**
 
 Puerta abierta.
 
 ---
 
-#### **Estado 4: ROOM_STATE_ACCESS_DENIED (Acceso denegado)**
+### **Estado 4: ROOM_STATE_ACCESS_DENIED (Acceso denegado)**
 
-Pantalla: “ACCESO DENEGADO”
-
-Se envía por ESP-01:
-
-`ALERTA: Acceso denegado`
-
-Después de 3 segundos vuelve a LOCKED.
+- Muestra: “**ACCESO DENEGADO**”  
+- Envía al ESP-01: `"ALERTA: Acceso denegado"`  
+- Luego de 3 segundos vuelve a LOCKED
 
 ---
 
-#### **Estado 5: ROOM_STATE_EMERGENCY (Emergencia)**
+### **Estado 5: ROOM_STATE_EMERGENCY (Emergencia)**
 
-Pantalla:
-
-- EMERGENCIA  
-- SALGA  
-
-Acciones automáticas:
-
-- Puerta abierta  
+- Pantalla: “**EMERGENCIA**” y “**SALGA**”  
+- Puerta se abre  
 - Ventilador al 100%  
-- Mensaje al ESP-01: `ALERTA: Emergencia activada`  
-
-Salir con tecla `#`
-
----
-
-### 3. Partes principales del código
-
-- `room_control_init()`
-- `room_control_update()`
-- `room_control_process_key()`
-- `room_control_update_fan()`
-- `room_control_update_door()`
-- `room_control_update_display()`
-- `room_control_calculate_fan_level()`
+- Envía: `"ALERTA: Emergencia activada"`  
+- Salida con tecla **#**
 
 ---
 
-### 4. Funcionamiento del teclado
+## 3. Principales funciones del código
+
+### `room_control_init()`
+Configura estado inicial y PWM.
+
+### `room_control_update()`
+Evalúa estado actual y actualiza puerta, display y ventilador.
+
+### `room_control_process_key()`
+Procesa teclas según estado.
+
+### `room_control_update_fan()`
+Convierte nivel a PWM.
+
+### `room_control_update_door()`
+Abre/cierra con un pin digital.
+
+### `room_control_update_display()`
+Actualiza pantalla OLED solo si es necesario.
+
+### `room_control_calculate_fan_level()`
+Calcula nivel automático según temperatura.
+
+---
+
+## 4. Funcionamiento del teclado
 
 | Tecla | Acción |
 |-------|--------|
 | 0–9 | Digitar clave / controlar ventilador |
-| A | Activar modo automático |
+| A | Modo automático |
 | B | Bloquear sistema |
 | C | Borrar |
 | D | Emergencia |
-| 0–3 | Niveles manuales del ventilador |
+| 0–3 | Niveles manuales de ventilador |
 | # | Salir de emergencia |
 
-Pines:
+**Pines:**
 
-- Filas (STM32): PC0–PC3  
-- Columnas: PC4–PC7
+- Filas (Outputs): PC0–PC3  
+- Columnas (Inputs Pull-up): PC4–PC7
 
 ---
 
-### 5. Control del ventilador 
+## 5. Control del ventilador
 
-**Modo automático:**
+### Automático
 
 - < 25°C → OFF  
 - 25–28°C → BAJO  
 - 28–31°C → MEDIO  
 - > 31°C → ALTO  
 
-**Modo manual:**
+### Manual
 
 - 0 → OFF  
 - 1 → BAJO  
 - 2 → MEDIO  
 - 3 → ALTO  
 
-PWM: PA6 – TIM3_CH1 (duty cycle 0–99)
+**Pin:** PA6 (TIM3_CH1)  
+**Duty cycle:** 0–99
 
 ---
 
-### 6. Control de la puerta:
+## 6. Control de la puerta
 
-Abre en:
+Se abre en:
 
 - UNLOCKED  
 - EMERGENCY  
 
-Cierra en:
+Se cierra en:
 
 - LOCKED  
 - ACCESS_DENIED  
 
-Pin: PA4 (GPIO Output)
+**Pin:** PA4 – GPIO Output  
+- LOW → cerrada  
+- HIGH → abierta
 
 ---
 
-### 7. Pantalla OLED SSD1306
+## 7. Pantalla OLED SSD1306
 
-Se actualiza solo cuando `display_update_needed = true`.
-
-I2C:
-
-- PB6 – SCL  
-- PB7 – SDA  
+- Actualización solo si `display_update_needed == true`  
+- Pines: PB6 (SCL), PB7 (SDA)
 
 ---
 
-### 8. Comunicación con ESP-01
+## Comunicación con ESP-01
 
-Por UART.
+Mensajes UART:
 
-Ejemplos enviados:
-
+- `"ALERTA: Acceso denegado\r\n"`  
+- `"ALERTA: Emergencia activada\r\n"`
 
 Pines:
 
-- PB10 – TX  
-- PB11 – RX  
+- PB10 – USART3_TX  
+- PB11 – USART3_RX  
 
 ---
 
-## Optimizaciones aplicadas
+## Optimizaciones
 
-- PWM inicializado solo una vez.  
-- Actualización de pantalla eficiente.  
-- Control automático del ventilador optimizado.  
-- Máquina de estados modular.
+- PWM inicializado una única vez  
+- Actualización de pantalla solo cuando cambia algo  
+- Máquina de estados modular y escalable  
+- Control eficiente por temperatura  
 
 ---
 
 ## Resultados
-![WhatsApp Image 2025-12-11 at 11.16.13 AM](WhatsApp%20Image%202025-12-11%20at%2011.16.13%20AM.jpeg)
+![WhatsApp Image 2025-12-11 at 11.47.22 AM](WhatsApp%20Image%202025-12-11%20at%2011.47.22%20AM.jpeg)
+- Figura 1: Circuito montado
 ![WhatsApp Image 2025-12-11 at 9.57.18 AM](WhatsApp%20Image%202025-12-11%20at%209.57.18%20AM.jpeg)
 
-![WhatsApp Image 2025-12-11 at 9.55.34 AM](WhatsApp%20Image%202025-12-11%20at%209.55.34%20AM.jpeg)
+- Figura 2: Diagrama
+![WhatsApp Image 2025-12-11 at 11.16.13 AM](WhatsApp%20Image%202025-12-11%20at%2011.16.13%20AM.jpeg)
 
-![WhatsApp Image 2025-12-11 at 11.47.22 AM](WhatsApp%20Image%202025-12-11%20at%2011.47.22%20AM.jpeg)
-
+- Figura 3: Sistema funcionando  
 
 ---
 
 ## Observaciones
 
-- El diseño modular facilitó la depuración.  
-- La máquina de estados aportó estabilidad.  
-- Se mitigó el ruido del teclado con debounce.  
-- El modo manual puede activarse accidentalmente.  
-- El modo emergencia funciona bien pero podría requerir confirmación adicional.  
-- El teclado es crítico para el funcionamiento.
+- El diseño modular permitió depuración sencilla  
+- Máquina de estados mejoró la estabilidad  
+- Teclado presentó ruido → solucionado con debounce  
+- Modo manual del ventilador puede activarse accidentalmente  
+- Emergencia funciona, pero sería útil pedir confirmación  
+- El teclado es crítico para todo el sistema  
 
 ---
 
 ## Conclusiones
 
-- El STM32 permitió integrar todos los periféricos eficientemente.
-- El ventilador respondió correctamente en ambos modos.
-- El modo emergencia es fundamental para situaciones críticas.
-- El sistema es funcional, seguro y escalable.
+- El STM32 controló todos los módulos de forma estable  
+- La pantalla permitió interacción clara con el usuario  
+- Ventilador respondió bien en modo manual y automático  
+- Modo emergencia resultó esencial  
+- Sistema cumple objetivos y es ampliable en el futuro
+
+
 
 
 
